@@ -8,6 +8,13 @@
         "SELF_PORT": "8802",
         "PEER_URL": "http://127.0.0.1:8801/"
       }
+    },
+    "telegram": {
+      "command": "cc-bridge-telegram",
+      "env": {
+        "AGENT_NAME": "native",
+        "ALLOWED_USER_ID": "REPLACE_WITH_YOUR_TELEGRAM_USER_ID"
+      }
     }
   }
 }

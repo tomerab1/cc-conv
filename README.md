@@ -4,6 +4,9 @@ A two-way bridge that lets two Claude Code sessions push tasks to each other and
 them automatically — no copy-paste, no "check your inbox." Built on Claude Code's official
 [Channels](https://code.claude.com/docs/en/channels) feature.
 
+It also ships a **Telegram control channel** (message your agents from your phone) and a
+PreToolUse **firewall** that hard-blocks dangerous commands.
+
 ## How it works
 
 ```
@@ -38,9 +41,9 @@ Two instances point at each other over localhost. No central broker.
    (or set `BRIDGE_SECRET` in the env instead).
 3. Add a `bridge` server to each project's `.mcp.json` (see `examples/*/.mcp.json` for the exact
    shape): `"command": "cc-bridge"` with its `env`: `SELF_NAME`, `PEER_NAME`, `SELF_PORT`, `PEER_URL`.
-4. Launch each session:
+4. Launch each session (load whichever channels you use):
    ```bash
-   claude --dangerously-load-development-channels server:bridge
+   claude --dangerously-load-development-channels server:bridge server:telegram
    ```
 
 ## Usage
@@ -48,6 +51,26 @@ Two instances point at each other over localhost. No central broker.
 In session A, tell Claude: *"send a message to the peer: …"*. It calls `send_to_peer`, the
 message arrives in session B as a channel event, and B acts on it on its own. Reply the same
 way in reverse.
+
+## Telegram control
+
+Message your agents from your phone. Run **one bot per agent** in a common Telegram group;
+Telegram's group privacy mode means each bot only sees messages that **@mention** it, so
+`@myproj_native_bot update the client` reaches only that agent. Replies come back in the group.
+Only your Telegram user id is allowed to command the agents.
+
+Setup:
+
+1. Create one bot per agent with [@BotFather](https://t.me/BotFather); save each token:
+   `pbpaste | npm run set-token -- server` (then `… -- native`) → `~/.claude/telegram-<agent>.token` (chmod 600).
+2. Get your numeric id from [@userinfobot](https://t.me/userinfobot) and set it as `ALLOWED_USER_ID`
+   in each agent's `telegram` server `env`.
+3. Make a group with you + both bots (keep bot privacy mode ON).
+4. Add a `telegram` server to each project's `.mcp.json` (`"command": "cc-bridge-telegram"`,
+   `env`: `AGENT_NAME`, `ALLOWED_USER_ID`) — see `examples/*/.mcp.json` — and include
+   `server:telegram` in the `--dangerously-load-development-channels` launch.
+
+In the group, @mention an agent to task it; it answers via the `reply_to_telegram` tool.
 
 ## Security
 
@@ -69,15 +92,18 @@ combination safe.
 | Path | What |
 | --- | --- |
 | `bridge/` | the channel server, split by concern (`main`, `config`, `channel-server`, `send-tool`, `peer-client`, `inbound-server`, `echo-guard`, `types`) |
+| `telegram/` | Telegram control channel (`cc-bridge-telegram`): client, routing, reply tool, poll loop |
 | `firewall/` | PreToolUse safety hook: pure `rules.ts` + thin `main.ts`, run as `cc-firewall` |
 | `security/settings.template.json` | permissions + hook wiring to copy into a project |
 | `examples/{server-side,native-side}/.mcp.json` | runnable two-instance demo (ports 8801/8802) |
 | `test/` | unit + integration tests (`npm test`) |
+| `scripts/` | helpers (e.g. `set-token` for saving bot tokens) |
+| `bin/` | `cc-bridge` / `cc-bridge-telegram` / `cc-firewall` launchers (linked via `npm link`) |
 
 ## Reuse in other projects
 
-Run `npm link` once, then reference the path-free commands `cc-bridge` (and `cc-firewall` for
-the hook) from any project's `.mcp.json` / `.claude/settings.json` — see `examples/`. No
+Run `npm link` once, then reference the path-free commands `cc-bridge`, `cc-bridge-telegram`,
+and `cc-firewall` from any project's `.mcp.json` / `.claude/settings.json` — see `examples/`. No
 absolute paths, so moving or renaming this repo doesn't break consumers (re-run `npm link` if
 you move it).
 

@@ -5,7 +5,9 @@ Guidance for Claude Code working in this repository. See `README.md` for the use
 ## What this is
 
 A symmetric two-way bridge that connects two Claude Code sessions over localhost so each can
-push tasks into the other's live session, built on the official Channels feature.
+push tasks into the other's live session, built on the official Channels feature. It also
+includes a **Telegram control channel** (`telegram/`) to drive the agents from a phone and a
+PreToolUse **firewall** (`firewall/`).
 
 ## Architecture
 
@@ -23,6 +25,11 @@ push tasks into the other's live session, built on the official Channels feature
   - `bridge/echo-guard.ts` — drop self/duplicate messages to prevent ping-pong.
   - `bridge/types.ts` — shared types.
 - The MCP server's `name` is set to `PEER_NAME`, so inbound events read `<channel source="<peer>">`.
+- Telegram channel (`telegram/`), one responsibility each: `config.ts` (token from
+  `~/.claude/telegram-<agent>.token`), `telegram-client.ts` (getUpdates/sendMessage),
+  `routing.ts` (pure: extract / @mention / sender allowlist), `reply-tool.ts` (pure reply
+  handler), `channel.ts` (server + `reply_to_telegram` tool), `poll-loop.ts` (long-poll →
+  `pushToSession`), `main.ts` (wire). One bot per agent; @mention routing; allowlisted to one user id.
 
 ## Conventions
 
@@ -42,7 +49,9 @@ push tasks into the other's live session, built on the official Channels feature
 
 ## Config (per side, via the `.mcp.json` `env` block)
 
-`SELF_NAME`, `PEER_NAME`, `SELF_PORT`, `PEER_URL`; `BRIDGE_SECRET` from env or `~/.claude/bridge-secret`.
+Bridge: `SELF_NAME`, `PEER_NAME`, `SELF_PORT`, `PEER_URL`; `BRIDGE_SECRET` from env or `~/.claude/bridge-secret`.
+
+Telegram: `AGENT_NAME`, `ALLOWED_USER_ID`; token from `TELEGRAM_TOKEN` or `~/.claude/telegram-<agent>.token`.
 
 ## Security model
 
@@ -54,4 +63,5 @@ untrusted input.
 
 - Channels is a research preview: needs Claude Code v2.1.80+, the
   `--dangerously-load-development-channels` flag for custom channels, and claude.ai/Console auth.
-- `.mcp.json` `args` and the hook `command` are absolute paths — update them if the repo moves.
+- Configs reference the linked CLIs (`cc-bridge` / `cc-bridge-telegram` / `cc-firewall`) — path-free.
+  Re-run `npm link` if you move the repo.

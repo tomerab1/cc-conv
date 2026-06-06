@@ -10,6 +10,7 @@
   },
   "bin": {
     "cc-bridge": "./bin/cc-bridge.mjs",
+    "cc-bridge-telegram": "./bin/cc-telegram.mjs",
     "cc-firewall": "./bin/cc-firewall.mjs"
   },
   "scripts": {
