@@ -3,6 +3,7 @@ import type { TelegramConfig } from './types.ts'
 import { pushToSession } from '../bridge/channel-server.ts'
 import { getUpdates } from './telegram-client.ts'
 import { extractMessage, shouldHandle, stripMention } from './routing.ts'
+import { parseVerdict } from './permission.ts'
 
 const ERROR_BACKOFF_MS = 2000
 
@@ -21,7 +22,16 @@ export function startPolling(server: Server, config: TelegramConfig, botUsername
       const message = extractMessage(update)
       if (!message) continue
       if (!shouldHandle(message, { botUsername, allowedUserId: config.allowedUserId })) continue
-      await deliver(stripMention(message.text, botUsername), message.chatId, message.fromId)
+      const text = stripMention(message.text, botUsername)
+      const verdict = parseVerdict(text)
+      if (verdict) {
+        await server.notification({
+          method: 'notifications/claude/channel/permission',
+          params: { request_id: verdict.requestId, behavior: verdict.behavior },
+        })
+        continue
+      }
+      await deliver(text, message.chatId, message.fromId)
     }
   }
 

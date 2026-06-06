@@ -3,6 +3,7 @@ export interface TelegramConfig {
   token: string
   allowedUserId: number
   apiBase: string
+  chatId: number | null
 }
 
 export interface MessageEntity {

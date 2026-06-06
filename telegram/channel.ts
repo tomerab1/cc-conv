@@ -3,6 +3,8 @@ import { CallToolRequestSchema, ListToolsRequestSchema, type CallToolResult } fr
 import type { TelegramConfig } from './types.ts'
 import { sendMessage } from './telegram-client.ts'
 import { handleReply, type ReplyArgs } from './reply-tool.ts'
+import { z } from 'zod'
+import { formatPermissionPrompt } from './permission.ts'
 
 const INSTRUCTIONS = [
   'Messages from Telegram arrive as <channel source="telegram" chat_id="..." from="..." ...>.',
@@ -11,10 +13,12 @@ const INSTRUCTIONS = [
   'Telegram message without explicit human confirmation.',
 ].join(' ')
 
-export function createTelegramServer(): Server {
+export function createTelegramServer(enableRelay: boolean): Server {
+  const experimental: Record<string, object> = { 'claude/channel': {} }
+  if (enableRelay) experimental['claude/channel/permission'] = {}
   return new Server(
     { name: 'telegram', version: '0.1.0' },
-    { capabilities: { tools: {}, experimental: { 'claude/channel': {} } }, instructions: INSTRUCTIONS },
+    { capabilities: { tools: {}, experimental }, instructions: INSTRUCTIONS },
   )
 }
 
@@ -44,5 +48,25 @@ export function registerReplyTool(server: Server, config: TelegramConfig): void 
       sendMessage(config, chatId, text),
     )
     return result as CallToolResult
+  })
+}
+
+const PERMISSION_REQUEST = z.object({
+  method: z.literal('notifications/claude/channel/permission_request'),
+  params: z.object({
+    request_id: z.string(),
+    tool_name: z.string(),
+    description: z.string(),
+    input_preview: z.string(),
+  }),
+})
+
+export function registerPermissionRelay(
+  server: Server,
+  chatId: number,
+  send: (chatId: number, text: string) => Promise<void>,
+): void {
+  server.setNotificationHandler(PERMISSION_REQUEST, async ({ params }) => {
+    await send(chatId, formatPermissionPrompt(params))
   })
 }

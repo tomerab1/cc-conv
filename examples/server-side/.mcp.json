@@ -13,7 +13,8 @@
       "command": "cc-bridge-telegram",
       "env": {
         "AGENT_NAME": "server",
-        "ALLOWED_USER_ID": "REPLACE_WITH_YOUR_TELEGRAM_USER_ID"
+        "ALLOWED_USER_ID": "REPLACE_WITH_YOUR_TELEGRAM_USER_ID",
+        "TELEGRAM_CHAT_ID": "REPLACE_WITH_GROUP_CHAT_ID_OR_OMIT_TO_DISABLE_RELAY"
       }
     }
   }

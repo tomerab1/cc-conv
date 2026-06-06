@@ -28,6 +28,14 @@ function loadToken(agentName: string): string {
   throw new Error(`No TELEGRAM_TOKEN env var and no readable token at ${file}`)
 }
 
+function parseChatId(): number | null {
+  const raw = process.env.TELEGRAM_CHAT_ID
+  if (!raw) return null
+  const id = Number(raw)
+  if (!Number.isInteger(id)) throw new Error(`Invalid TELEGRAM_CHAT_ID: ${raw}`)
+  return id
+}
+
 export function loadConfig(): TelegramConfig {
   const agentName = required('AGENT_NAME')
   return {
@@ -35,5 +43,6 @@ export function loadConfig(): TelegramConfig {
     token: loadToken(agentName),
     allowedUserId: parseUserId(required('ALLOWED_USER_ID')),
     apiBase: process.env.TELEGRAM_API_BASE ?? 'https://api.telegram.org',
+    chatId: parseChatId(),
   }
 }

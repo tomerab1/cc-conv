@@ -72,6 +72,10 @@ Setup:
 
 In the group, @mention an agent to task it; it answers via the `reply_to_telegram` tool.
 
+**Permission relay (optional):** set `TELEGRAM_CHAT_ID` (the group id) in the `telegram` env, and
+risky tool approvals are forwarded to the group — reply `yes <id>` / `no <id>` to approve or deny
+from your phone. The terminal prompt also stays live, and the first answer wins.
+
 ## Security
 
 A received peer message is untrusted input (a prompt-injection surface). The defenses live in

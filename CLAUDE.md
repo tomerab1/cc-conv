@@ -51,7 +51,8 @@ PreToolUse **firewall** (`firewall/`).
 
 Bridge: `SELF_NAME`, `PEER_NAME`, `SELF_PORT`, `PEER_URL`; `BRIDGE_SECRET` from env or `~/.claude/bridge-secret`.
 
-Telegram: `AGENT_NAME`, `ALLOWED_USER_ID`; token from `TELEGRAM_TOKEN` or `~/.claude/telegram-<agent>.token`.
+Telegram: `AGENT_NAME`, `ALLOWED_USER_ID`, optional `TELEGRAM_CHAT_ID` (enables permission relay);
+token from `TELEGRAM_TOKEN` or `~/.claude/telegram-<agent>.token`.
 
 ## Security model
 
