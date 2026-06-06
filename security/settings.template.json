@@ -35,7 +35,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node --disable-warning=ExperimentalWarning --experimental-strip-types /Users/tomerab/Documents/cc-conv/pretool-firewall.ts"
+            "command": "cc-firewall"
           }
         ]
       }

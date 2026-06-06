@@ -57,7 +57,7 @@ A received peer message is untrusted input (a prompt-injection surface). The def
 - Run with **normal permissions** (never `--dangerously-skip-permissions`) so risky ops pause
   for your approval.
 - A **deny-list** blocks destructive commands outright.
-- The **PreToolUse firewall** (`pretool-firewall.ts`) hard-blocks dangerous Bash and writes
+- The **PreToolUse firewall** (`cc-firewall`) hard-blocks dangerous Bash and writes
   outside the project / to secret paths — deterministically, regardless of the model.
 - The **secret gate** means only the paired peer can inject messages.
 
@@ -69,7 +69,7 @@ combination safe.
 | Path | What |
 | --- | --- |
 | `bridge/` | the channel server, split by concern (`main`, `config`, `channel-server`, `send-tool`, `peer-client`, `inbound-server`, `echo-guard`, `types`) |
-| `pretool-firewall.ts` | PreToolUse safety hook |
+| `firewall/` | PreToolUse safety hook: pure `rules.ts` + thin `main.ts`, run as `cc-firewall` |
 | `security/settings.template.json` | permissions + hook wiring to copy into a project |
 | `examples/{server-side,native-side}/.mcp.json` | runnable two-instance demo (ports 8801/8802) |
 | `test/` | unit + integration tests (`npm test`) |

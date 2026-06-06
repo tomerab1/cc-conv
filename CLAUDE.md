@@ -30,8 +30,8 @@ push tasks into the other's live session, built on the official Channels feature
 - `tsconfig.json` sets `allowImportingTsExtensions`, so import siblings as `./x.ts`.
 - Code style: readable over clever, **no banner/section comments**, one responsibility per
   function, small modules. Comments only where intent isn't obvious.
-- The firewall hook runs via `node --experimental-strip-types` (faster on the per-tool-call
-  hot path than tsx) — keep it **erasable-only** TS: no enums, namespaces, or param properties.
+- The firewall hook runs via the `cc-firewall` CLI (tsx). Pure predicates live in
+  `firewall/rules.ts` (unit-tested); `firewall/main.ts` is the thin stdin/exit wrapper.
 
 ## Commands
 
