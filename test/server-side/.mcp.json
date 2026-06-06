@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "bridge": {
+      "command": "node",
+      "args": ["--import", "tsx", "/Users/tomerab/Documents/cc-conv/bridge/main.ts"],
+      "env": {
+        "SELF_NAME": "server",
+        "PEER_NAME": "native",
+        "SELF_PORT": "8801",
+        "PEER_URL": "http://127.0.0.1:8802/"
+      }
+    }
+  }
+}

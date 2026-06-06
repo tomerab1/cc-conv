@@ -1,0 +1,12 @@
+node_modules/
+dist/
+
+.env
+.env.*
+*.token
+*.secret
+
+*.log
+.DS_Store
+
+.claude/
