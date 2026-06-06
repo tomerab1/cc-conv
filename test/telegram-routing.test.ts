@@ -55,3 +55,13 @@ test('shouldHandle accepts a reply to our bot', () => {
 test('stripMention removes the bot tag', () => {
   assert.equal(stripMention('@server_bot do x', 'server_bot'), 'do x')
 })
+
+test('shouldHandle accepts any message from the allowed user in a DM', () => {
+  const message = extractMessage(update({ chat: { id: 42, type: 'private' }, text: 'do x' }))!
+  assert.equal(shouldHandle(message, opts), true)
+})
+
+test('shouldHandle rejects a DM from a different user', () => {
+  const message = extractMessage(update({ chat: { id: 999, type: 'private' }, from: { id: 999 }, text: 'do x' }))!
+  assert.equal(shouldHandle(message, opts), false)
+})

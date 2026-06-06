@@ -15,6 +15,7 @@ export interface MessageEntity {
 export interface TelegramMessage {
   messageId: number
   chatId: number
+  chatType: string
   fromId: number
   text: string
   entities: MessageEntity[]
@@ -25,7 +26,7 @@ export interface RawUpdate {
   update_id: number
   message?: {
     message_id?: number
-    chat?: { id?: number }
+    chat?: { id?: number; type?: string }
     from?: { id?: number }
     text?: string
     entities?: MessageEntity[]

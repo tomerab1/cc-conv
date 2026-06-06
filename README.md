@@ -57,7 +57,8 @@ way in reverse.
 Message your agents from your phone. Run **one bot per agent** in a common Telegram group;
 Telegram's group privacy mode means each bot only sees messages that **@mention** it, so
 `@myproj_native_bot update the client` reaches only that agent. Replies come back in the group.
-Only your Telegram user id is allowed to command the agents.
+Only your Telegram user id is allowed to command the agents. You can also **DM a single bot
+directly** (no @mention needed) — handy for one agent or quick testing.
 
 Setup:
 

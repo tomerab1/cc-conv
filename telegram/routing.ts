@@ -9,6 +9,7 @@ export function extractMessage(update: RawUpdate): TelegramMessage | null {
   return {
     messageId: message.message_id,
     chatId: message.chat.id,
+    chatType: message.chat.type ?? '',
     fromId: message.from.id,
     text: message.text,
     entities: message.entities ?? [],
@@ -29,5 +30,6 @@ export function shouldHandle(
   options: { botUsername: string; allowedUserId: number },
 ): boolean {
   if (message.fromId !== options.allowedUserId) return false
+  if (message.chatType === 'private') return true
   return mentionsBot(message, options.botUsername) || message.replyToBotUsername === options.botUsername
 }
