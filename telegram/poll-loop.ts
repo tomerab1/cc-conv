@@ -17,11 +17,17 @@ export function startPolling(server: Server, config: TelegramConfig, botUsername
 
   async function pollOnce(): Promise<void> {
     const updates = await getUpdates(config, offset)
+    if (updates.length) process.stderr.write(`[telegram] got ${updates.length} update(s)\n`)
     for (const update of updates) {
       offset = Math.max(offset, update.update_id + 1)
       const message = extractMessage(update)
       if (!message) continue
-      if (!shouldHandle(message, { botUsername, allowedUserId: config.allowedUserId })) continue
+      if (!shouldHandle(message, { botUsername, allowedUserId: config.allowedUserId })) {
+        process.stderr.write(
+          `[telegram] ignored msg from ${message.fromId} in ${message.chatType}: "${message.text.slice(0, 50)}"\n`,
+        )
+        continue
+      }
       process.stderr.write(`[telegram] handling message from ${message.fromId} in ${message.chatType}\n`)
       const text = stripMention(message.text, botUsername)
       const verdict = parseVerdict(text)
