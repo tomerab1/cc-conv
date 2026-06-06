@@ -14,7 +14,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "node --test"
+    "test": "node --import tsx --test 'test/**/*.test.ts'"
   },
   "keywords": [
     "claude-code",
