@@ -10,5 +10,5 @@
     "allowImportingTsExtensions": true,
     "types": ["node"]
   },
-  "include": ["*.ts", "bridge/**/*.ts", "firewall/**/*.ts", "test/**/*.ts"]
+  "include": ["*.ts", "bridge/**/*.ts", "firewall/**/*.ts", "telegram/**/*.ts", "test/**/*.ts"]
 }
