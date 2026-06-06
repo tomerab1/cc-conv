@@ -1,18 +1,30 @@
 {
-  "name": "cc-conv",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "name": "cc-bridge",
+  "version": "0.1.0",
+  "description": "Connect Claude Code sessions: a CC-to-CC channel bridge, a Telegram control channel, and a PreToolUse safety firewall.",
+  "type": "module",
+  "license": "MIT",
+  "author": "tomerab1",
+  "engines": {
+    "node": ">=22"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "bin": {
+    "cc-bridge": "./bin/cc-bridge.mjs",
+    "cc-firewall": "./bin/cc-firewall.mjs"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test"
+  },
+  "keywords": [
+    "claude-code",
+    "mcp",
+    "channels",
+    "bridge"
+  ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0"
   },
-  "type": "module",
   "devDependencies": {
     "@types/node": "^25.9.1",
     "tsx": "^4.22.4",
