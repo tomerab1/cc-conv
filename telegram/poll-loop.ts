@@ -22,6 +22,7 @@ export function startPolling(server: Server, config: TelegramConfig, botUsername
       const message = extractMessage(update)
       if (!message) continue
       if (!shouldHandle(message, { botUsername, allowedUserId: config.allowedUserId })) continue
+      process.stderr.write(`[telegram] handling message from ${message.fromId} in ${message.chatType}\n`)
       const text = stripMention(message.text, botUsername)
       const verdict = parseVerdict(text)
       if (verdict) {
@@ -39,7 +40,9 @@ export function startPolling(server: Server, config: TelegramConfig, botUsername
     while (running) {
       try {
         await pollOnce()
-      } catch {
+      } catch (error) {
+        const reason = error instanceof Error ? error.message : String(error)
+        process.stderr.write(`[telegram] poll error: ${reason}\n`)
         await new Promise((resolve) => setTimeout(resolve, ERROR_BACKOFF_MS))
       }
     }

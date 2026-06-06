@@ -6,6 +6,7 @@ import { startPolling } from './poll-loop.ts'
 
 const config = loadConfig()
 const botUsername = await getBotUsername(config)
+process.stderr.write(`[telegram] started as @${botUsername} (agent ${config.agentName}, relay ${config.chatId !== null})\n`)
 const server = createTelegramServer(config.chatId !== null)
 
 registerReplyTool(server, config)
