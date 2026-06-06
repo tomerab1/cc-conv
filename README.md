@@ -32,12 +32,12 @@ Two instances point at each other over localhost. No central broker.
 
 ## Setup
 
-1. `npm install`
+1. `npm install && npm link` (installs deps; puts `cc-bridge` / `cc-firewall` on your PATH)
 2. Create the shared secret both sides read:
    `openssl rand -hex 32 > ~/.claude/bridge-secret && chmod 600 ~/.claude/bridge-secret`
    (or set `BRIDGE_SECRET` in the env instead).
-3. Add a `bridge` server to each project's `.mcp.json` (see `test/*/.mcp.json` for the exact
-   shape) with its `env`: `SELF_NAME`, `PEER_NAME`, `SELF_PORT`, `PEER_URL`.
+3. Add a `bridge` server to each project's `.mcp.json` (see `examples/*/.mcp.json` for the exact
+   shape): `"command": "cc-bridge"` with its `env`: `SELF_NAME`, `PEER_NAME`, `SELF_PORT`, `PEER_URL`.
 4. Launch each session:
    ```bash
    claude --dangerously-load-development-channels server:bridge
@@ -71,13 +71,15 @@ combination safe.
 | `bridge/` | the channel server, split by concern (`main`, `config`, `channel-server`, `send-tool`, `peer-client`, `inbound-server`, `echo-guard`, `types`) |
 | `pretool-firewall.ts` | PreToolUse safety hook |
 | `security/settings.template.json` | permissions + hook wiring to copy into a project |
-| `test/{server-side,native-side}/.mcp.json` | local two-instance harness (ports 8801/8802) |
+| `examples/{server-side,native-side}/.mcp.json` | runnable two-instance demo (ports 8801/8802) |
+| `test/` | unit + integration tests (`npm test`) |
 
-## Note on paths
+## Reuse in other projects
 
-The `args` in `.mcp.json` and the hook `command` use **absolute paths** to this repo. If you
-move or rename the repo, update them in `test/*/.mcp.json`, `security/settings.template.json`,
-and each real project's config.
+Run `npm link` once, then reference the path-free commands `cc-bridge` (and `cc-firewall` for
+the hook) from any project's `.mcp.json` / `.claude/settings.json` — see `examples/`. No
+absolute paths, so moving or renaming this repo doesn't break consumers (re-run `npm link` if
+you move it).
 
 ## Caveats
 

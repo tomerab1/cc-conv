@@ -1,8 +1,7 @@
 {
   "mcpServers": {
     "bridge": {
-      "command": "node",
-      "args": ["--import", "tsx", "/Users/tomerab/Documents/cc-conv/bridge/main.ts"],
+      "command": "cc-bridge",
       "env": {
         "SELF_NAME": "server",
         "PEER_NAME": "native",

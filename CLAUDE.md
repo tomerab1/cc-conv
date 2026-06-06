@@ -36,8 +36,9 @@ push tasks into the other's live session, built on the official Channels feature
 ## Commands
 
 - Typecheck: `npx tsc --noEmit`
-- Local two-instance test: launch Claude from `test/server-side` and `test/native-side` with
+- Two-instance demo: launch Claude from `examples/server-side` and `examples/native-side` with
   `claude --dangerously-load-development-channels server:bridge`, then call `send_to_peer` in one.
+- Run tests: `npm test` (`node --import tsx --test`).
 
 ## Config (per side, via the `.mcp.json` `env` block)
 
