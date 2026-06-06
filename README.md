@@ -64,8 +64,9 @@ Setup:
 
 1. Create one bot per agent with [@BotFather](https://t.me/BotFather); save each token:
    `pbpaste | npm run set-token -- server` (then `… -- native`) → `~/.claude/telegram-<agent>.token` (chmod 600).
-2. Get your numeric id from [@userinfobot](https://t.me/userinfobot) and set it as `ALLOWED_USER_ID`
-   in each agent's `telegram` server `env`.
+2. Get your numeric id from [@userinfobot](https://t.me/userinfobot) and save it **outside the repo**:
+   `echo <id> > ~/.claude/telegram-allowed-user` (or set `ALLOWED_USER_ID` in the env). Keeping it in
+   `~/.claude` keeps your id out of git.
 3. Make a group with you + both bots (keep bot privacy mode ON).
 4. Add a `telegram` server to each project's `.mcp.json` (`"command": "cc-bridge-telegram"`,
    `env`: `AGENT_NAME`, `ALLOWED_USER_ID`) — see `examples/*/.mcp.json` — and include

@@ -12,8 +12,7 @@
     "telegram": {
       "command": "cc-bridge-telegram",
       "env": {
-        "AGENT_NAME": "native",
-        "ALLOWED_USER_ID": "REDACTED"
+        "AGENT_NAME": "native"
       }
     }
   }

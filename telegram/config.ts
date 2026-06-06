@@ -9,9 +9,20 @@ function required(name: string): string {
   return value
 }
 
-function parseUserId(raw: string): number {
+function readAllowedUserFile(): string | null {
+  const file = join(homedir(), '.claude', 'telegram-allowed-user')
+  try {
+    const value = readFileSync(file, 'utf8').trim()
+    if (value) return value
+  } catch {}
+  return null
+}
+
+function loadAllowedUserId(): number {
+  const raw = process.env.ALLOWED_USER_ID ?? readAllowedUserFile()
+  if (!raw) throw new Error('No ALLOWED_USER_ID env var and no ~/.claude/telegram-allowed-user file')
   const id = Number(raw)
-  if (!Number.isInteger(id)) throw new Error(`Invalid ALLOWED_USER_ID: ${raw}`)
+  if (!Number.isInteger(id)) throw new Error(`Invalid allowed user id: ${raw}`)
   return id
 }
 
@@ -41,7 +52,7 @@ export function loadConfig(): TelegramConfig {
   return {
     agentName,
     token: loadToken(agentName),
-    allowedUserId: parseUserId(required('ALLOWED_USER_ID')),
+    allowedUserId: loadAllowedUserId(),
     apiBase: process.env.TELEGRAM_API_BASE ?? 'https://api.telegram.org',
     chatId: parseChatId(),
   }

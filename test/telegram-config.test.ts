@@ -40,5 +40,5 @@ test('throws without AGENT_NAME', () => {
 })
 
 test('rejects a non-numeric user id', () => {
-  withEnv({ ...BASE, ALLOWED_USER_ID: 'abc' }, () => assert.throws(() => loadConfig(), /ALLOWED_USER_ID/))
+  withEnv({ ...BASE, ALLOWED_USER_ID: 'abc' }, () => assert.throws(() => loadConfig(), /allowed user id/i))
 })
