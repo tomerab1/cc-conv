@@ -2,8 +2,12 @@ import type { RawUpdate, TelegramMessage } from './types.ts'
 
 export function extractMessage(update: RawUpdate): TelegramMessage | null {
   const message = update.message
-  if (!message || typeof message.text !== 'string') return null
-  if (!message.chat?.id || !message.from?.id || !message.message_id) return null
+  if (!message || !message.chat?.id || !message.from?.id || !message.message_id) return null
+
+  const text = message.text ?? message.caption ?? ''
+  const photos = message.photo ?? []
+  const photoFileId = photos.length ? photos[photos.length - 1]?.file_id ?? null : null
+  if (!text && !photoFileId) return null
 
   const repliedTo = message.reply_to_message?.from
   return {
@@ -11,9 +15,10 @@ export function extractMessage(update: RawUpdate): TelegramMessage | null {
     chatId: message.chat.id,
     chatType: message.chat.type ?? '',
     fromId: message.from.id,
-    text: message.text,
+    text,
     entities: message.entities ?? [],
     replyToBotUsername: repliedTo?.is_bot ? repliedTo.username ?? null : null,
+    photoFileId,
   }
 }
 

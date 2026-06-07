@@ -1,7 +1,7 @@
 import type { Server } from '@modelcontextprotocol/sdk/server/index.js'
-import type { TelegramConfig } from './types.ts'
+import type { TelegramConfig, TelegramMessage } from './types.ts'
 import { pushToSession } from '../bridge/channel-server.ts'
-import { getUpdates } from './telegram-client.ts'
+import { downloadPhoto, getUpdates } from './telegram-client.ts'
 import { extractMessage, shouldHandle, stripMention } from './routing.ts'
 import { parseVerdict } from './permission.ts'
 
@@ -11,8 +11,13 @@ export function startPolling(server: Server, config: TelegramConfig, botUsername
   let offset = 0
   let running = true
 
-  async function deliver(text: string, chatId: number, fromId: number): Promise<void> {
-    await pushToSession(server, text, { chat_id: String(chatId), from: String(fromId) })
+  async function deliver(message: TelegramMessage, text: string): Promise<void> {
+    const meta: Record<string, string> = { chat_id: String(message.chatId), from: String(message.fromId) }
+    if (message.photoFileId) {
+      const imagePath = await downloadPhoto(config, message.photoFileId)
+      if (imagePath) meta.image_path = imagePath
+    }
+    await pushToSession(server, text || '(image)', meta)
   }
 
   async function pollOnce(): Promise<void> {
@@ -38,7 +43,7 @@ export function startPolling(server: Server, config: TelegramConfig, botUsername
         })
         continue
       }
-      await deliver(text, message.chatId, message.fromId)
+      await deliver(message, text)
     }
   }
 

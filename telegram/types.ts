@@ -20,6 +20,7 @@ export interface TelegramMessage {
   text: string
   entities: MessageEntity[]
   replyToBotUsername: string | null
+  photoFileId: string | null
 }
 
 export interface RawUpdate {
@@ -29,6 +30,8 @@ export interface RawUpdate {
     chat?: { id?: number; type?: string }
     from?: { id?: number }
     text?: string
+    caption?: string
+    photo?: Array<{ file_id?: string }>
     entities?: MessageEntity[]
     reply_to_message?: { from?: { is_bot?: boolean; username?: string } }
   }

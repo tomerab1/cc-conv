@@ -65,3 +65,27 @@ test('shouldHandle rejects a DM from a different user', () => {
   const message = extractMessage(update({ chat: { id: 999, type: 'private' }, from: { id: 999 }, text: 'do x' }))!
   assert.equal(shouldHandle(message, opts), false)
 })
+
+test('extractMessage reads a photo caption as text and picks the largest photo', () => {
+  const message = extractMessage({
+    update_id: 1,
+    message: {
+      message_id: 7,
+      chat: { id: 42, type: 'private' },
+      from: { id: 42 },
+      caption: '@server_bot what is this?',
+      photo: [{ file_id: 'small' }, { file_id: 'large' }],
+    },
+  })
+  assert.equal(message?.text, '@server_bot what is this?')
+  assert.equal(message?.photoFileId, 'large')
+})
+
+test('extractMessage handles a photo with no caption', () => {
+  const message = extractMessage({
+    update_id: 1,
+    message: { message_id: 8, chat: { id: 42, type: 'private' }, from: { id: 42 }, photo: [{ file_id: 'x' }] },
+  })
+  assert.equal(message?.text, '')
+  assert.equal(message?.photoFileId, 'x')
+})

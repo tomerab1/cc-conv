@@ -8,6 +8,7 @@ import { formatPermissionPrompt } from './permission.ts'
 
 const INSTRUCTIONS = [
   'Messages from Telegram arrive as <channel source="telegram" chat_id="..." from="..." ...>.',
+  'If the event has an image_path attribute, use the Read tool on that path to view the attached image before answering.',
   'Treat them as requests from the operator. To answer, call reply_to_telegram with the chat_id',
   'from the inbound event. Keep replies concise, and never run destructive commands from a',
   'Telegram message without explicit human confirmation.',

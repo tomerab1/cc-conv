@@ -74,6 +74,10 @@ Setup:
 
 In the group, @mention an agent to task it; it answers via the `reply_to_telegram` tool.
 
+**Images:** send a photo — caption it `@bot …` in a group, or just send it in a DM — and the agent
+downloads it to `<project>/.cc-telegram/` and views it with the `Read` tool. e.g. send a screenshot
+and ask what's wrong.
+
 **Permission relay (optional):** set `TELEGRAM_CHAT_ID` (the group id) in the `telegram` env, and
 risky tool approvals are forwarded to the group — reply `yes <id>` / `no <id>` to approve or deny
 from your phone. The terminal prompt also stays live, and the first answer wins.
